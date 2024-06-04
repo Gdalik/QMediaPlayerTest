@@ -58,6 +58,7 @@ class AudioPlayer(QMediaPlayer):
         self.stop()
 
     def playCurrentAudio(self):
+        self.action = 'play'
         if self.source() == self.currentAudio:
             self.play()
         else:
@@ -77,12 +78,10 @@ class MainWindowContr(QObject):
         self.mw_view.PlayOGGBut.clicked.connect(self.onPlayOGGBut_clicked)
 
     def onPlayMP3But_clicked(self):
-        self.player.action = 'play'
         self.player.currentAudio = QUrl(MP3File)
         self.player.playCurrentAudio()
 
     def onPlayOGGBut_clicked(self):
-        self.player.action = 'play'
         self.player.currentAudio = QUrl(OGGFile)
         self.player.playCurrentAudio()
 
