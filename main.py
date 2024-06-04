@@ -14,6 +14,8 @@ AudioBackend = 'ffmpeg'
 class MainWindowView(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setObjectName('MainWindow')
+        self.setWindowTitle('QMediaPlayer Test')
         self.resize(150, 150)
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName('centralwidget')
