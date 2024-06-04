@@ -7,6 +7,9 @@ import platform
 
 MP3File = 'Audio/MP3_example.mp3'
 OGGFile = 'Audio/OGG_example.ogg'
+
+# Uncomment the audio backend you want to use:
+
 AudioBackend = 'ffmpeg'
 # AudioBackend = 'native'
 
