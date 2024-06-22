@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QWidget, QApplication
-from PyQt6.QtCore import QObject, QUrl
+from PyQt6.QtCore import QObject, QUrl, Qt
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 import os
 import platform
@@ -33,6 +33,21 @@ class MainWindowView(QMainWindow):
         self.VerticalLay.addWidget(self.PlayMP3But)
         self.VerticalLay.addWidget(self.PlayOGGBut)
         self.VerticalLay.addWidget(self.StopBut)
+        self._setShortcuts()
+        self._showShortcuts()
+
+    def _setShortcuts(self):
+        self.PlayWAVEBut.setShortcut(Qt.Key.Key_1)
+        self.PlayMP3But.setShortcut(Qt.Key.Key_2)
+        self.PlayOGGBut.setShortcut(Qt.Key.Key_3)
+        self.StopBut.setShortcut(Qt.Key.Key_Space)
+
+    def _showShortcuts(self):
+        buttons = self.findChildren(QPushButton)
+        for B in buttons:
+            sc = B.shortcut()
+            B.setText(f'{B.text()} [Key: {sc.toString()}]')
+            B.setShortcut(sc)
 
 
 class AudioPlayer(QMediaPlayer):
