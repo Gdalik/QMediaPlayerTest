@@ -7,6 +7,7 @@ import platform
 
 MP3File = 'Audio/MP3_example.mp3'
 OGGFile = 'Audio/OGG_example.ogg'
+WAVEFile = 'Audio/WAVE_example.wav'
 
 # Uncomment the audio backend you want to use:
 
@@ -24,9 +25,11 @@ class MainWindowView(QMainWindow):
         self.centralwidget.setObjectName('centralwidget')
         self.setCentralWidget(self.centralwidget)
         self.VerticalLay = QVBoxLayout(self.centralwidget)
+        self.PlayWAVEBut = QPushButton('Play WAVE', self)
         self.PlayMP3But = QPushButton('Play MP3', self)
         self.PlayOGGBut = QPushButton('Play OGG', self)
         self.StopBut = QPushButton('Stop', self)
+        self.VerticalLay.addWidget(self.PlayWAVEBut)
         self.VerticalLay.addWidget(self.PlayMP3But)
         self.VerticalLay.addWidget(self.PlayOGGBut)
         self.VerticalLay.addWidget(self.StopBut)
@@ -57,6 +60,10 @@ class AudioPlayer(QMediaPlayer):
         self.action = 'stop'
         self.stop()
 
+    def playFile(self, file=WAVEFile):
+        self.currentAudio = QUrl(file)
+        self.playCurrentAudio()
+
     def playCurrentAudio(self):
         self.action = 'play'
         if self.source() == self.currentAudio:
@@ -74,16 +81,9 @@ class MainWindowContr(QObject):
         self.mw_view = parent
         self.mw_view.show()
         self.player = AudioPlayer(self)
-        self.mw_view.PlayMP3But.clicked.connect(self.onPlayMP3But_clicked)
-        self.mw_view.PlayOGGBut.clicked.connect(self.onPlayOGGBut_clicked)
-
-    def onPlayMP3But_clicked(self):
-        self.player.currentAudio = QUrl(MP3File)
-        self.player.playCurrentAudio()
-
-    def onPlayOGGBut_clicked(self):
-        self.player.currentAudio = QUrl(OGGFile)
-        self.player.playCurrentAudio()
+        self.mw_view.PlayMP3But.clicked.connect(lambda: self.player.playFile(MP3File))
+        self.mw_view.PlayOGGBut.clicked.connect(lambda: self.player.playFile(OGGFile))
+        self.mw_view.PlayWAVEBut.clicked.connect(lambda: self.player.playFile(WAVEFile))
 
 
 def setAudioBackend():
