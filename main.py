@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QWidget, QApplication
-from PyQt6.QtCore import QObject, QUrl, Qt
+from PyQt6.QtCore import QObject, QUrl, Qt, QLibraryInfo
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 import os
 import platform
@@ -86,7 +86,8 @@ class AudioPlayer(QMediaPlayer):
         else:
             self.setAudioFile()
 
-    def onError(self, err, string):
+    @staticmethod
+    def onError(err, string):
         print(f'{err}: {string}')
 
 
@@ -107,9 +108,20 @@ def setAudioBackend():
     os.environ['QT_MEDIA_BACKEND'] = value
 
 
+def printAudioBackend():
+    print(f"Qt multimedia backend: {os.getenv('QT_MEDIA_BACKEND')}")
+
+
+def printQtVersion():
+    print(f"Qt version: {QLibraryInfo.version().toString()}")
+
+
 if __name__ == '__main__':
     setAudioBackend()
     app = QApplication([])
     mw_view = MainWindowView()
     mw_contr = MainWindowContr(mw_view)
+    print(f'OS: {platform.system()}')
+    printQtVersion()
+    printAudioBackend()
     app.exec()
