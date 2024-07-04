@@ -52,7 +52,6 @@ class MainWindowView(QMainWindow):
 
 class AudioPlayer(QMediaPlayer):
     currentAudio: QUrl
-    action: str
 
     def __init__(self, parent):
         super().__init__()
@@ -60,31 +59,34 @@ class AudioPlayer(QMediaPlayer):
         self.audioOutput = QAudioOutput()
         self.setAudioOutput(self.audioOutput)
         self.audioOutput.setVolume(1)
-        self.mediaStatusChanged.connect(self.onPlayerStatusChanged)
+        self.mediaStatusChanged.connect(self.onMediaStatusChanged)
+        self.playbackStateChanged.connect(self.onPlayerStateChanged)
         self.mw_view.StopBut.clicked.connect(self.onStopBut_clicked)
         self.errorOccurred.connect(self.onError)
 
     def setAudioFile(self):
+        self.stop()
         self.setSource(self.currentAudio)
 
-    def onPlayerStatusChanged(self, status):
-        if status == QMediaPlayer.MediaStatus.LoadedMedia and self.action == 'play':
-            self.play()
+    def onMediaStatusChanged(self, status):
+        print(f'Media status: {status}')
+
+    def onPlayerStateChanged(self, state):
+        print(f'Player state: {state}')
 
     def onStopBut_clicked(self):
-        self.action = 'stop'
+        print('Stopping playback')
         self.stop()
 
     def playFile(self, file=WAVEFile):
+        print(f'Starting playback of "{file}"')
         self.currentAudio = QUrl(file)
         self.playCurrentAudio()
 
     def playCurrentAudio(self):
-        self.action = 'play'
-        if self.source() == self.currentAudio:
-            self.play()
-        else:
+        if self.source() != self.currentAudio:
             self.setAudioFile()
+        self.play()
 
     @staticmethod
     def onError(err, string):
