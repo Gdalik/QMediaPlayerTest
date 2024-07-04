@@ -66,6 +66,7 @@ class AudioPlayer(QMediaPlayer):
 
     def setAudioFile(self):
         self.stop()
+        print(f'Setting source: {self.currentAudio}')
         self.setSource(self.currentAudio)
 
     def onMediaStatusChanged(self, status):
@@ -75,11 +76,11 @@ class AudioPlayer(QMediaPlayer):
         print(f'Player state: {state}')
 
     def onStopBut_clicked(self):
-        print('Stopping playback')
+        print('User initiated stopping playback')
         self.stop()
 
     def playFile(self, file=WAVEFile):
-        print(f'Starting playback of "{file}"')
+        print(f'User initiated starting playback of "{file}"')
         self.currentAudio = QUrl(file)
         self.playCurrentAudio()
 
