@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QWidget, QApplication
-from PyQt6.QtCore import QObject, QUrl, Qt, QLibraryInfo
-from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QWidget, QApplication
+from PySide6.QtCore import QObject, QUrl, Qt, QLibraryInfo
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 import os
 import platform
 
