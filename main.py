@@ -18,6 +18,11 @@ AudioBackend = 'ffmpeg'
 class MainWindowView(QMainWindow):
     def __init__(self):
         super().__init__()
+        self._setupUI()
+        self._setShortcuts()
+        self._showShortcuts()
+
+    def _setupUI(self):
         self.setObjectName('MainWindow')
         self.setWindowTitle('QMediaPlayer Test')
         self.resize(150, 150)
@@ -33,8 +38,6 @@ class MainWindowView(QMainWindow):
         self.VerticalLay.addWidget(self.PlayMP3But)
         self.VerticalLay.addWidget(self.PlayOGGBut)
         self.VerticalLay.addWidget(self.StopBut)
-        self._setShortcuts()
-        self._showShortcuts()
 
     def _setShortcuts(self):
         self.PlayWAVEBut.setShortcut(Qt.Key.Key_1)
@@ -51,7 +54,6 @@ class MainWindowView(QMainWindow):
 
 
 class AudioPlayer(QMediaPlayer):
-    currentAudio: QUrl
 
     def __init__(self, parent):
         super().__init__()
@@ -63,11 +65,6 @@ class AudioPlayer(QMediaPlayer):
         self.playbackStateChanged.connect(self.onPlayerStateChanged)
         self.mw_view.StopBut.clicked.connect(self.onStopBut_clicked)
         self.errorOccurred.connect(self.onError)
-
-    def setAudioFile(self):
-        self.stop()
-        print(f'Setting source: {self.currentAudio}')
-        self.setSource(self.currentAudio)
 
     def onMediaStatusChanged(self, status):
         print(f'Media status: {status}')
@@ -81,12 +78,10 @@ class AudioPlayer(QMediaPlayer):
 
     def playFile(self, file=WAVEFile):
         print(f'User initiated starting playback of "{file}"')
-        self.currentAudio = QUrl(file)
-        self.playCurrentAudio()
-
-    def playCurrentAudio(self):
-        if self.source() != self.currentAudio:
-            self.setAudioFile()
+        self.stop()
+        source = QUrl(file)
+        print(f'Setting source: {source}')
+        self.setSource(source)
         self.play()
 
     @staticmethod
