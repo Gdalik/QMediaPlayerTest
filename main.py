@@ -18,6 +18,11 @@ AudioBackend = 'ffmpeg'
 class MainWindowView(QMainWindow):
     def __init__(self):
         super().__init__()
+        self._setupUI()
+        self._setShortcuts()
+        self._showShortcuts()
+
+    def _setupUI(self):
         self.setObjectName('MainWindow')
         self.setWindowTitle('QMediaPlayer Test')
         self.resize(150, 150)
@@ -33,8 +38,6 @@ class MainWindowView(QMainWindow):
         self.VerticalLay.addWidget(self.PlayMP3But)
         self.VerticalLay.addWidget(self.PlayOGGBut)
         self.VerticalLay.addWidget(self.StopBut)
-        self._setShortcuts()
-        self._showShortcuts()
 
     def _setShortcuts(self):
         self.PlayWAVEBut.setShortcut(Qt.Key.Key_1)
@@ -51,8 +54,6 @@ class MainWindowView(QMainWindow):
 
 
 class AudioPlayer(QMediaPlayer):
-    currentAudio: QUrl
-    action: str
 
     def __init__(self, parent):
         super().__init__()
@@ -60,31 +61,28 @@ class AudioPlayer(QMediaPlayer):
         self.audioOutput = QAudioOutput()
         self.setAudioOutput(self.audioOutput)
         self.audioOutput.setVolume(1)
-        self.mediaStatusChanged.connect(self.onPlayerStatusChanged)
+        self.mediaStatusChanged.connect(self.onMediaStatusChanged)
+        self.playbackStateChanged.connect(self.onPlayerStateChanged)
         self.mw_view.StopBut.clicked.connect(self.onStopBut_clicked)
         self.errorOccurred.connect(self.onError)
 
-    def setAudioFile(self):
-        self.setSource(self.currentAudio)
+    def onMediaStatusChanged(self, status):
+        print(f'Media status: {status}')
 
-    def onPlayerStatusChanged(self, status):
-        if status == QMediaPlayer.MediaStatus.LoadedMedia and self.action == 'play':
-            self.play()
+    def onPlayerStateChanged(self, state):
+        print(f'Player state: {state}')
 
     def onStopBut_clicked(self):
-        self.action = 'stop'
+        print('User initiated stopping playback')
         self.stop()
 
     def playFile(self, file=WAVEFile):
-        self.currentAudio = QUrl(file)
-        self.playCurrentAudio()
-
-    def playCurrentAudio(self):
-        self.action = 'play'
-        if self.source() == self.currentAudio:
-            self.play()
-        else:
-            self.setAudioFile()
+        print(f'User initiated starting playback of "{file}"')
+        self.stop()
+        source = QUrl(file)
+        print(f'Setting source: {source}')
+        self.setSource(source)
+        self.play()
 
     @staticmethod
     def onError(err, string):
